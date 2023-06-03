@@ -10,11 +10,12 @@
             <div class="col-5">
                 <div class="card mb-4">
                     <div class="card-header pb-0">
-                        <form>
+                        <form action="{{ route('transaction.index') }}" method="GET">
+                            @csrf
                             <div class="row">
                                 <div class="col-10">
                                     <input class="form-control" type="text"
-                                           placeholder="nama produk atau nomor serial produk">
+                                           placeholder="nama produk atau nomor serial produk" name="keyword">
                                 </div>
                                 <div class="col-2">
                                     <button type="submit" class="btn btn-primary">Cari</button>
@@ -22,65 +23,73 @@
                             </div>
                         </form>
                     </div>
-                    <div class="card-body px-0 pt-0 pb-4">
-                        @php
-                            $data = ["asdasd","asdasdasd"]
-                        @endphp
-                        @if(count($data) < 1)
-                            <div class="text-center mt-5">
-                                <h6>data tidak ada</h6>
-                            </div>
-                        @else
-                            <div class="overflow-auto" style="height: 500px">
+                    <div class="card-body px-0 pt-0 pb-4 overflow-auto" style="height: 525px">
+                        @isset($product)
+                            @if(count($product) < 1)
+                                <div class="text-center mt-5">
+                                    <h6>data tidak ada</h6>
+                                </div>
+                            @else
                                 <div class="table-responsive pb-2 px-2">
                                     <table class="table align-items-center mb-0">
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex px-2 py-1">
-                                                    <div>
-                                                        <img
-                                                            src="https://demos.creative-tim.com/soft-ui-design-system-pro/assets/img/team-2.jpg"
-                                                            class="avatar avatar-xxl me-3">
+                                        @foreach($product as $item)
+                                            <tr>
+                                                <td>
+                                                    <div class="d-flex px-2 py-1">
+                                                        <div>
+                                                            <img
+                                                                src="{{ url('/')."/".$item->image }}"
+                                                                class="avatar avatar-xxl me-3">
+                                                        </div>
+                                                        <div class="d-flex flex-column justify-content-center">
+                                                            <h6 class="mb-0 text-lg">{{ $item->name }}</h6>
+                                                            <p class="text-lg text-secondary mb-0">
+                                                                Rp {{ number_format($item->selling_price) }}</p>
+                                                            <p class="text-lg text-secondary ">
+                                                                Tersisa {{ $item->stock." ".$item->unit }} </p>
+                                                        </div>
                                                     </div>
-                                                    <div class="d-flex flex-column justify-content-center">
-                                                        <h6 class="mb-0 text-lg">John Michael</h6>
-                                                        <p class="text-lg text-secondary mb-0">Rp 20.000</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="align-middle">
-                                                <p class="text-lg text-secondary ">20 Stok</p>
-                                            </td>
-                                            <td class="align-middle">
-                                                <a href="javascript:;" class=" btn btn-slack font-weight-bold text-xs"
-                                                   data-toggle="tooltip" data-original-title="Edit user">
-                                                    Tambah
-                                                </a>
-                                            </td>
-                                        </tr>
+                                                </td>
+                                                <td class="align-middle">
+                                                    {{--                                                        <input type="number" class="form-control" name="qty" min="1" value="1" oninput="validateInput(this)" >--}}
+                                                </td>
+                                                <td class="align-middle pt-4 text-center">
+                                                    <form action="{{ route('cart.addItem') }}" method="POST">
+                                                        @csrf
+                                                        <input type="hidden" value="{{ $item->id }}" name="product_id">
+                                                        <input type="submit"
+                                                               class=" btn btn-slack font-weight-bold text-xs"
+                                                               value="Tambah">
+                                                    </form>
+
+                                                </td>
+                                            </tr>
+                                        @endforeach
                                     </table>
                                 </div>
-
-                            </div>
-                        @endif
+                            @endif
+                        @endisset
                     </div>
                     <div class="card-footer ">
 
                     </div>
                 </div>
             </div>
-
+            @php
+            $totalItem = 0;
+            $totalPrice = 0;
+            @endphp
             <div class="col-7">
                 <div class="card mb-4">
                     <div class="card-header  text-end ">
                         <span class="text-bolder">  {{ date("d M Y") }}</span>
                     </div>
-                    <div class="card-body overflow-auto px-0 pt-0 pb-4" style="height: 380px">
+                    <div class="card-body overflow-auto px-0 pt-0 pb-4" style="height: 335px">
                         <div class="table-responsive p-0 pb-2">
                             <table class="table table-bordered  table-striped align-items-center mb-0 ">
                                 <thead>
                                 <tr>
-                                    <th class="text-uppercase text-secondary text-center text-xxs  font-weight-bolder"
+                                    <th class="text-uppercase text-secondary  text-xxs  font-weight-bolder"
                                         width="50%">Product Name
                                     </th>
                                     <th class="text-uppercase text-secondary text-center text-xxs  font-weight-bolder"
@@ -98,15 +107,26 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td class="text-center">asd1</td>
-                                    <td class="text-center">1</td>
-                                    <td class="text-end">Rp. 150 000</td>
-                                    <td class="text-end">Rp. 150 000</td>
-                                    <td class="text-center p-0 ">
-                                        <button class="btn btn-danger text-xxs mt-3 p-2">Hapus</button>
-                                    </td>
-                                </tr>
+                                @foreach($cart as $item)
+                                    @php
+                                        $totalPrice += ($item->price*$item->qty);
+                                        $totalItem += ($item->qty);
+                                    @endphp
+                                    <tr>
+                                        <td class="text-start">{{ $item->product->name }}</td>
+                                        <td class="text-center">{{ $item->qty }}</td>
+                                        <td class="text-end">Rp. {{ number_format($item->price) }}</td>
+                                        <td class="text-end">Rp. {{ number_format($item->price*$item->qty) }}</td>
+                                        <td class="text-center p-0 ">
+                                            <form action="{{ route('cart.subtractItem') }}" method="POST">
+                                                @csrf
+                                                <input type="hidden" value="{{ $item->product->id }}" name="product_id">
+                                                <input type="submit" class="btn btn-danger text-xxs mt-3 px-2 py-2" value="Kurangi Stok">
+                                            </form>
+                                        </td>
+                                    </tr>
+
+                                @endforeach
                                 </tbody>
 
 
@@ -117,10 +137,16 @@
                         <div class="table-responsive p-0 pb-2">
                             <table class="table  align-items-center mb-0 " border="0">
                                 <tr>
-                                    <td class="text-end text-xl " colspan="4" style="height: 50px;">
+                                    <td class="text-end text-xl " colspan="4" width="70%" style="height: 50px;">
+                                        Total Item :
+                                    </td>
+                                    <td class="text-end text-xl">{{ $totalItem }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-end text-xl " colspan="4" width="70%" style="height: 50px;">
                                         Total Harga :
                                     </td>
-                                    <td class="text-end text-xl">Rp. 100.000</td>
+                                    <td class="text-end text-xl">Rp. {{ number_format($totalPrice) }}</td>
                                 </tr>
                                 <tr>
                                     <td colspan="5" class="text-end">

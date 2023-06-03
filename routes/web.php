@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\CartController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,6 +41,12 @@ Route::middleware(['auth'])->group(function () {
 
     Route::prefix('transaction')->group(function () {
         Route::get('/', [TransactionController::class, 'index'])->name('transaction.index');
+        Route::post('/pay', [TransactionController::class, 'pay'])->name('transaction.pay');
+    });
+
+    Route::prefix('cart')->group(function () {
+        Route::post('/add', [CartController::class, 'addItem'])->name('cart.addItem');
+        Route::post('/subtract', [CartController::class, 'subtractItem'])->name('cart.subtractItem');
     });
 
 });

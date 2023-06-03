@@ -40,8 +40,6 @@
 
 <body class="g-sidenav-show bg-gray-100" style="background:white !important; ">
 <div class="min-height-300 bg-dark position-absolute w-100"></div>
-
-
 <main class="main-content position-relative border-radius-lg ">
     <!-- Navbar -->
     @include('layouts.components.top_navbar')
@@ -125,7 +123,18 @@
 <script async defer src="https://buttons.github.io/buttons.js"></script>
 <script src="{{ asset('/assets/js/argon-dashboard.min.js?v=2.0.4') }}"></script>
 <script>
+    function validateInput(input) {
+        // Remove leading zeros
+        input.value = input.value.replace(/^0+/, '');
 
+        // Remove "e" if present
+        input.value = input.value.replace(/e/gi, '');
+
+        // Ensure value is greater than or equal to zero
+        if (parseFloat(input.value) < 0 || isNaN(input.value)) {
+            input.value = '';
+        }
+    }
 </script>
 
 <script>

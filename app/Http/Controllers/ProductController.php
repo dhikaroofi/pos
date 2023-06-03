@@ -49,13 +49,58 @@ class ProductController extends BaseCRUDController
                $image = $request->file('image');
                $filename = uniqid() . '.' . $image->getClientOriginalExtension();
                $request->file('image')->storeAs(
-                   'product', $filename
+                   'public/images/product', $filename
                );
            }
+            $filename = "images/product/".$filename;
 
             $validatedData = $validator->validated();
 
             $this->model::create(array(
+                "name"=>$validatedData["name"],
+                "category_id"=>$validatedData["category"],
+                "unit"=>$validatedData["unit"],
+                "selling_price"=>$validatedData["selling_price"],
+                "selling_price_resellers"=>$validatedData["selling_price_resellers"],
+                "stock"=>$validatedData["stock"],
+                "image"=>$filename,
+            ));
+            return redirect()->back()->with('success', $this->pageData["title"] . " berhasil dibuat");
+        }catch (\Exception $e){
+            return redirect()->back()->with('failed', $e->getMessage());
+        }
+    }
+
+
+    public function actUpdate(Request $request)
+    {
+        $validator = Validator::make($request->all(),
+            $this->validation,
+            $this->validationMessage,
+        );
+
+
+        if ($validator->fails()) {
+            return redirect()->back()->with('failed', $validator->errors()->messages());
+        }
+        $filename = "";
+        try {
+            if($request->has("image")){
+                $image = $request->file('image');
+                $filename = uniqid() . '.' . $image->getClientOriginalExtension();
+                $request->file('image')->storeAs(
+                    'public/images/product', $filename
+                );
+            }
+
+            $filename = "images/product/".$filename;
+
+            $validatedData = $validator->validated();
+            $result = $this->model::where("id",$request->get("id"))->first();
+            if(!$result){
+                return redirect()->back()->with('failed', $this->pageData["title"] . " tidak ditemukan");
+            }
+            $this->model::where("id",$request->get("id"))->update(array(
                 "name"=>$validatedData["name"],
                 "category_id"=>$validatedData["category"],
                 "unit"=>$validatedData["unit"],

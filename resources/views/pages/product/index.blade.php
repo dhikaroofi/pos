@@ -59,7 +59,8 @@
                                             <a type="button" data-bs-toggle="modal"
                                                data-form-name="{{ $item->name }}"
                                                data-form-id="{{ $item->id }}"
-                                               data-form-category="{{ $item->category }}"
+                                               data-form-category_id="{{ $item->category->id }}"
+                                               data-form-category_name="{{ $item->category->name }}"
                                                data-form-stock="{{ $item->stock }}"
                                                data-form-unit="{{ $item->unit }}"
                                                data-form-selling_price="{{ $item->selling_price }}"
@@ -170,13 +171,12 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body ">
-                    <form id="updateCategoryForm" method="POST" action="{{ route($page.'.actUpdate') }}">
+                    <form id="updateCategoryForm" method="POST" action="{{ route($page.'.actUpdate') }}" enctype="multipart/form-data">
                         @csrf
                         @method("PUT")
-
                         <div class="form-group mt-3">
-                            <label for="inptCategoryProduct">Kategori Produk</label>
-                            <select class="form-control" name="category" id="inptCategoryProduct" required>
+                            <label for="updtFormProductCategory">Kategori Produk</label>
+                            <select class="form-control" name="category" id="updtFormProductCategory" required>
                                 <option value="" disabled selected>Pilih Kategori</option>
                                 @foreach($formData["categories"] as $item)
                                     <option value="{{ $item->id }}">{{ $item->name }}</option>
@@ -184,20 +184,20 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="inptNameProduct">Nama Produk</label>
-                            <input type="text" class="form-control" name="name" id="inptNameProduct" required>
+                            <label for="updtFormProductName">Nama Produk</label>
+                            <input type="text" class="form-control" name="name" id="updtFormProductName" required>
                         </div>
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="inptSellingPrice">Unit</label>
-                                    <input type="text" class="form-control" name="unit" id="inptSellingPrice" required>
+                                    <label for="updtFormProductUnit">Unit</label>
+                                    <input type="text" class="form-control" name="unit" id="updtFormProductUnit" required>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="inptSellingPrice">Stock</label>
-                                    <input type="number" class="form-control" name="stock" id="inptSellingPrice"
+                                    <label for="updtFormProductStock">Stock</label>
+                                    <input type="number" class="form-control" name="stock" id="updtFormProductStock"
                                            value="0">
                                 </div>
                             </div>
@@ -205,16 +205,16 @@
                         <div class="row">
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="inptSellingPrice">Harga Jual</label>
-                                    <input type="number" class="form-control" name="selling_price" id="inptSellingPrice"
+                                    <label for="updtFormProductSellingPrice">Harga Jual</label>
+                                    <input type="number" class="form-control" name="selling_price" id="updtFormProductSellingPrice"
                                            value="0" required>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
-                                    <label for="inptSellingPriceResellers">Harga Jual Reseller</label>
+                                    <label for="updtFormProductSellingPriceResellers">Harga Jual Reseller</label>
                                     <input type="number" class="form-control" name="selling_price_resellers"
-                                           id="inptSellingPriceResellers" value="0" required>
+                                           id="updtFormProductSellingPriceResellers" value="0" required>
                                 </div>
                             </div>
                         </div>
@@ -222,11 +222,11 @@
                             <div class="col-6 ">
                                 <div class="form-group">
                                     <label for="inptPictureProduct">Gambar Produk</label>
-                                    <input type="file" class="form-control" name="image" id="inptPictureProduct" onchange="previewImage(event)">
+                                    <input type="file" class="form-control" name="image" id="updtFormProductImage" onchange="previewImage(event)">
                                 </div>
                             </div>
                             <div class="col-6 text-center pt-3 ">
-                                <img  class="img-thumbnail w-75" src=""    id="updtFormProductImage">
+                                <img class="img-thumbnail w-75" src="" id="updtFormProductImagePrev">
                             </div>
                         </div>
                         <input type="hidden" name="id" id="updtFormProductID" >
@@ -259,14 +259,16 @@
         for (var i = 0; i < btnModalCategory.length; i++) {
             btnModalCategory[i].addEventListener('click', function () {
                 setOverlaySidenav();
-                //
-                // var image = document.getElementById("myImage");
-                // image.src = "image2.jpg";
-                // image.alt = "Image 2";
 
-                document.getElementById("updtFormProductImage").src = "{{url('/')}}"+"/product_images/"+this.getAttribute("data-form-image");
-                // document.getElementById("updtFormCategoryID").value = this.getAttribute("data-form-id");
-                // document.getElementById("deleteCategoryID").value = this.getAttribute("data-form-id");
+                document.getElementById("deleteCategoryID").value = this.getAttribute("data-form-id");
+                document.getElementById("updtFormProductID").value = this.getAttribute("data-form-id");
+                document.getElementById("updtFormProductImagePrev").src = "{{url('/')}}"+"/"+this.getAttribute("data-form-image");
+                appendOption(this.getAttribute("data-form-category_id"),this.getAttribute("data-form-category_name"),)
+                document.getElementById("updtFormProductName").value = this.getAttribute("data-form-name");
+                document.getElementById("updtFormProductStock").value = this.getAttribute("data-form-stock");
+                document.getElementById("updtFormProductUnit").value = this.getAttribute("data-form-unit");
+                document.getElementById("updtFormProductSellingPrice").value = this.getAttribute("data-form-selling_price");
+                document.getElementById("updtFormProductSellingPriceResellers").value = this.getAttribute("data-form-selling_price_resellers");
             }, false);
         }
 
@@ -292,7 +294,7 @@
 
         function previewImage(event) {
             var input = event.target;
-            var preview = document.getElementById('updtFormProductImage');
+            var preview = document.getElementById('updtFormProductImagePrev');
 
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
@@ -307,6 +309,18 @@
         }
 
 
+
+        function appendOption($id,$caption) {
+            var selectElement = document.getElementById("updtFormProductCategory");
+            // Create a new option element
+            var newOption = document.createElement("option");
+
+            // Set the value and text content of the new option
+            newOption.value = $id;
+            newOption.textContent = $caption;
+            selectElement.insertBefore(newOption, selectElement.firstChild);
+            newOption.selected = true;
+        }
     </script>
 
 @endsection

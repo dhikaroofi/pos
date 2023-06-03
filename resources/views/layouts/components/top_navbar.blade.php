@@ -11,6 +11,18 @@
             </ol>
             <h6 class="font-weight-bolder text-white mb-0">{{ $title }}</h6>
         </nav>
+        @if(Route::currentRouteName() == "transaction.index")
+            <div class=" d-xl-block d-none text-white">
+                <ul class="navbar-nav">
+                    <li class="nav-item d-flex align-items-center">
+                        <a href="{{ route('home') }}" class="nav-link text-white font-weight-bold px-0">
+                            <i class="fa fa-home me-sm-1" aria-hidden="true"></i>
+                            <span class="d-sm-inline d-none">Home</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        @endif
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
             <div class="ms-md-auto pe-md-3 d-flex align-items-center">
 
