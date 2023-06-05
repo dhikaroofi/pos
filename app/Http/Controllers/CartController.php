@@ -74,6 +74,10 @@ class CartController extends Controller
                 $cart->user_id = $id;
                 $cart->save();
             }else{
+                if (($find->qty + 1) >= $checkProduct->stock){
+                    return redirect()->back()->with('failed', "stok tidak tersedia");
+                }
+
                 $find->qty = $find->qty + 1;
                 $find->save();
             }

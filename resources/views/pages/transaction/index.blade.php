@@ -113,7 +113,7 @@
                                         $totalItem += ($item->qty);
                                     @endphp
                                     <tr>
-                                        <td class="text-start">{{ $item->product->name }}</td>
+                                        <td class="text-start text-uppercase">{{ $item->product->name }}</td>
                                         <td class="text-center">{{ $item->qty }}</td>
                                         <td class="text-end">Rp. {{ number_format($item->price) }}</td>
                                         <td class="text-end">Rp. {{ number_format($item->price*$item->qty) }}</td>
@@ -121,11 +121,10 @@
                                             <form action="{{ route('cart.subtractItem') }}" method="POST">
                                                 @csrf
                                                 <input type="hidden" value="{{ $item->product->id }}" name="product_id">
-                                                <input type="submit" class="btn btn-danger text-xxs mt-3 px-2 py-2" value="Kurangi Stok">
+                                                <input type="submit" class="btn btn-danger text-xxs mt-3 px-2 py-2" value="Kurangi">
                                             </form>
                                         </td>
                                     </tr>
-
                                 @endforeach
                                 </tbody>
 
@@ -151,7 +150,8 @@
                                 <tr>
                                     <td colspan="5" class="text-end">
                                         <button class="btn btn-danger col-2 mt-3 mx-2">Batalkan</button>
-                                        <button class="btn btn-slack col-3 mt-3">Bayar</button>
+                                        <a class="btn btn-slack col-3 mt-3" data-bs-toggle="modal" id="btnModalPay"
+                                           data-bs-target="#modalPay" style="text-transform: capitalize;">Bayar</a>
                                     </td>
                                 </tr>
                             </table>
@@ -160,43 +160,88 @@
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Button trigger modal -->
 
-
-
-    <div class="modal fade modal-dialog-scrollable" id="modalCreateCategory" data-bs-backdrop="static"
-         data-bs-keyboard="false"
-         tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg ">
-            <div class="modal-content">
+        <div class="row">
+            <div class="col-12">
+                <div class="card mb-4">
+                    <div class="card-header pb-0">
+                    </div>
+                    <div class="card-body px-0 pt-0 pb-4">
+                        <div class="table-responsive p-0 pb-2">
+                            <table class="table align-items-center mb-0  ">
+                                <thead>
+                                <tr>
+                                    <th class="text-uppercase text-secondary text-center text-xxs  font-weight-bolder"
+                                        width="10px">No
+                                    </th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2"
+                                        width="225px">
+                                        Total Barang
+                                    </th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2"
+                                        width="225px">
+                                        Total Harga
+                                    </th>
+                                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder ps-2"
+                                        width="225px">
+                                        Waktu Transaksi
+                                    </th>
+                                    <th class="text-uppercase text-center text-xxs " width=15px">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($transaction as $key => $item)
+                                    <tr>
+                                        <td class="align-middle  text-center ">{{ $key+1 }}</td>
+                                        <td class="align-middle " width="100px">{{ $item->total_item }}</td>
+                                        <td class="align-middle ">Rp. {{ number_format($item->total_price) }}</td>
+                                        <td class="align-middle ">{{ date('d M Y H:i',strtotime($item->created_at)) }}</td>
+                                        <td class="text-sm text-center">
+                                           <a href="{{ route('transaction.print',$item->id) }}"> <i class="fas fa-print"></i> Print Struk</a>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer ">
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal -->
-    <div class="modal fade modal-dialog-scrollable" id="modalCategory" data-bs-backdrop="static"
+    <div class="modal fade modal-dialog-scrollable" id="modalPay" data-bs-backdrop="static"
          data-bs-keyboard="false"
          tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg ">
             <div class="modal-content">
+                <form method="POST" action="{{ route("transaction.pay") }}" >
+                    @csrf
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel" style="text-transform: capitalize;">Pembayaran</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="inptNameProduct">Total Harga</label>
+                            <input type="text" class="form-control" name="name" value="Rp. {{ number_format($totalPrice) }}" disabled>
+                        </div>
 
-                <div class="modal-header ">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel" style="text-transform: capitalize;">Rubah
-                        Data {{ $title }}</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-
-                </div>
-                <div class="modal-footer text-start bg-dark">
-                </div>
+                        <div class="form-group">
+                            <label for="inptNameProduct">Jumlah Bayar</label>
+                            <input type="text" class="form-control" name="amount" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn col-3 btn-slack">Bayar</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
-    <script>
-
-    </script>
 @endsection
 

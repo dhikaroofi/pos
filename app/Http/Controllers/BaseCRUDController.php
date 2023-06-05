@@ -22,14 +22,21 @@ class BaseCRUDController extends Controller
 
         $this->pageData["title"] = $title;
         $this->pageData["page"] = $page;
+        $this->pageData["keywordColumn"] = "name";
     }
 
 
-    public function index()
+    public function index(Request $request)
     {
         $this->getFormData(array());
         $this->pageData["currentPage"] = "List Data";
-        $this->pageData["data"] = $this->model::paginate(10);
+        $getData = $this->model;
+        if ($request->has('keyword')){
+            $keyword = "%".strtolower($request->get('keyword'))."%";
+            $getData = $getData->where($this->pageData["keywordColumn"],'LIKE',$keyword);
+        }
+        $getData = $getData->paginate(10);
+        $this->pageData["data"] = $getData;
         return view("pages." . $this->pageData["page"] . ".index", $this->pageData);
     }
 
@@ -49,20 +56,34 @@ class BaseCRUDController extends Controller
     {
     }
 
+    protected function validateBefore(Request $request): string{
+        return "";
+    }
 
+    protected function sanitzedData(array $data){
+
+        return $data;
+    }
     public function actCreate(Request $request)
     {
+
         $validator = Validator::make($request->all(),
             $this->validation,
             $this->validationMessage,
         );
+
 
         if ($validator->fails()) {
             return redirect()->back()->with('failed', $validator->errors()->messages());
         }
 
         try {
-            $this->model::create($validator->validated());
+            $validateBefore = $this->validateBefore($request);
+            if($validateBefore != ""){
+                return redirect()->back()->with('failed', $validateBefore);
+            }
+
+            $this->model::create($this->sanitzedData($validator->validated()));
             return redirect()->back()->with('success', $this->pageData["title"] . " berhasil dibuat");
         }catch (\Exception $e){
             return redirect()->back()->with('failed', $e->getMessage());
@@ -84,12 +105,18 @@ class BaseCRUDController extends Controller
             return redirect()->back()->with('failed', $validator->errors());
         }
 
+        $validateBefore = $this->validateBefore($request);
+        if($validateBefore != ""){
+            return redirect()->back()->with('failed', $validateBefore);
+        }
+
         try {
             $result = $this->model::where("id",$request->get("id"))->first();
             if(!$result){
                 return redirect()->back()->with('failed', $this->pageData["title"] . " tidak ditemukan");
             }
-            $this->model::where("id",$request->get("id"))->update($validator->validated());
+
+            $this->model::where("id",$request->get("id"))->update($this->sanitzedData($validator->validated()));
             return redirect()->back()->with('success', $this->pageData["title"] . " berhasil di rubah");
         }catch (\Exception $e){
             return redirect()->back()->with('failed', $e->getMessage());

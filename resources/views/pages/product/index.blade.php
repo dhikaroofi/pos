@@ -12,8 +12,18 @@
             <div class="col-12">
                 <div class="card mb-4">
                     <div class="card-header pb-0">
+                        <form action="" method="GET" class="row">
+                            @csrf
+                            <div class="col-5">
+                                <input class="form-control" type="text"
+                                       placeholder="nama produk atau nomor serial produk" name="keyword">
+                            </div>
+                            <div class="col-2">
+                                <button type="submit" class="btn btn-primary">Cari</button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="card-body px-0 pt-0 pb-4">
+                    <div class="card-body px-0 pt-0 pb-4 mt-3">
                         <div class="table-responsive p-0 pb-2">
                             <table class="table align-items-center mb-0  ">
                                 <thead>
@@ -171,7 +181,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body ">
-                    <form id="updateCategoryForm" method="POST" action="{{ route($page.'.actUpdate') }}" enctype="multipart/form-data">
+                    <form id="updateCategoryForm" method="POST" action="{{ route($page.'.actUpdate') }}"
+                          enctype="multipart/form-data">
                         @csrf
                         @method("PUT")
                         <div class="form-group mt-3">
@@ -191,7 +202,8 @@
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="updtFormProductUnit">Unit</label>
-                                    <input type="text" class="form-control" name="unit" id="updtFormProductUnit" required>
+                                    <input type="text" class="form-control" name="unit" id="updtFormProductUnit"
+                                           required>
                                 </div>
                             </div>
                             <div class="col-6">
@@ -206,7 +218,8 @@
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="updtFormProductSellingPrice">Harga Jual</label>
-                                    <input type="number" class="form-control" name="selling_price" id="updtFormProductSellingPrice"
+                                    <input type="number" class="form-control" name="selling_price"
+                                           id="updtFormProductSellingPrice"
                                            value="0" required>
                                 </div>
                             </div>
@@ -222,14 +235,15 @@
                             <div class="col-6 ">
                                 <div class="form-group">
                                     <label for="inptPictureProduct">Gambar Produk</label>
-                                    <input type="file" class="form-control" name="image" id="updtFormProductImage" onchange="previewImage(event)">
+                                    <input type="file" class="form-control" name="image" id="updtFormProductImage"
+                                           onchange="previewImage(event)">
                                 </div>
                             </div>
                             <div class="col-6 text-center pt-3 ">
                                 <img class="img-thumbnail w-75" src="" id="updtFormProductImagePrev">
                             </div>
                         </div>
-                        <input type="hidden" name="id" id="updtFormProductID" >
+                        <input type="hidden" name="id" id="updtFormProductID">
                     </form>
                     <a class="btn col-3 btn-reddit float-end"
                        onclick="event.preventDefault(); document.getElementById('updateCategoryForm').submit();">Ubah
@@ -262,8 +276,8 @@
 
                 document.getElementById("deleteCategoryID").value = this.getAttribute("data-form-id");
                 document.getElementById("updtFormProductID").value = this.getAttribute("data-form-id");
-                document.getElementById("updtFormProductImagePrev").src = "{{url('/')}}"+"/"+this.getAttribute("data-form-image");
-                appendOption(this.getAttribute("data-form-category_id"),this.getAttribute("data-form-category_name"),)
+                document.getElementById("updtFormProductImagePrev").src = "{{url('/')}}" + "/" + this.getAttribute("data-form-image");
+                appendOption(this.getAttribute("data-form-category_id"), this.getAttribute("data-form-category_name"),)
                 document.getElementById("updtFormProductName").value = this.getAttribute("data-form-name");
                 document.getElementById("updtFormProductStock").value = this.getAttribute("data-form-stock");
                 document.getElementById("updtFormProductUnit").value = this.getAttribute("data-form-unit");
@@ -289,6 +303,7 @@
         modalCreateCategory.addEventListener("hidden.bs.modal", function () {
             unsetOverlaySidenav()
         });
+
         // END
 
 
@@ -309,8 +324,7 @@
         }
 
 
-
-        function appendOption($id,$caption) {
+        function appendOption($id, $caption) {
             var selectElement = document.getElementById("updtFormProductCategory");
             // Create a new option element
             var newOption = document.createElement("option");

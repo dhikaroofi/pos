@@ -12,8 +12,10 @@ class Controller extends BaseController
         "page"=>"",
         "title" => "",
         "currentPage" => "",
+        "keywordColumn"=>"",
         "data"=>array(),
         "formData"=>array(),
+
     );
 
 

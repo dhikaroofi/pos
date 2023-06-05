@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('transaction_id');
             $table->foreignId('product_id');
-            $table->string('unit');
-            $table->integer('stock')->default(0);
+            $table->string('unit')->nullable();
+            $table->integer('qty')->default(0);
             $table->integer('price')->default(0);
             $table->softDeletes();
             $table->timestamps();

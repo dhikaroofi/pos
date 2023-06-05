@@ -15,6 +15,8 @@ class CategoryController extends BaseCRUDController
         $this->validation = array(
             'name'     => 'required|'
         );
+        $this->pageData["keywordColumn"] = "name";
+
         parent::__construct($model,"kategori","category");
     }
 

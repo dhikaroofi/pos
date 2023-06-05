@@ -13,7 +13,6 @@ class ProductController extends BaseCRUDController
     public function __construct()
     {
         $model = new Product;
-
         $this->validation = array(
             'category' => 'required',
             'name' => 'required',
@@ -21,7 +20,7 @@ class ProductController extends BaseCRUDController
             'stock' => 'required|integer',
             'selling_price' => 'required|integer',
             'selling_price_resellers' => 'required|integer',
-            'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048'
+            'image' => 'sometimes|required|image|mimes:jpg,png,jpeg,gif,svg|max:2048'
         );
         parent::__construct($model, "Produk", "product");
     }
@@ -39,10 +38,10 @@ class ProductController extends BaseCRUDController
             $this->validationMessage,
         );
 
-
         if ($validator->fails()) {
             return redirect()->back()->with('failed', $validator->errors()->messages());
         }
+
         $filename = "";
         try {
            if($request->has("image")){
@@ -57,7 +56,7 @@ class ProductController extends BaseCRUDController
             $validatedData = $validator->validated();
 
             $this->model::create(array(
-                "name"=>$validatedData["name"],
+                "name"=>strtolower($validatedData["name"]),
                 "category_id"=>$validatedData["category"],
                 "unit"=>$validatedData["unit"],
                 "selling_price"=>$validatedData["selling_price"],
@@ -71,14 +70,12 @@ class ProductController extends BaseCRUDController
         }
     }
 
-
     public function actUpdate(Request $request)
     {
         $validator = Validator::make($request->all(),
             $this->validation,
             $this->validationMessage,
         );
-
 
         if ($validator->fails()) {
             return redirect()->back()->with('failed', $validator->errors()->messages());
