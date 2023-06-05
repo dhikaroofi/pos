@@ -14,23 +14,20 @@
         </tr>
         <tr>
             <th width="100px" style="text-align: left">Produk</th>
-            <th width="100px" style="text-align: right">Harga</th>
+            <th width="100px" style="text-align: left">Harga</th>
             <th width="80px" style="text-align: center">Jumlah</th>
             <th width="100px" style="text-align: right">Total Price</th>
         </tr>
         @php
             $itemPrice = 0;
             @endphp
-        @foreach($transaction->detail as $item)
+        @foreach($transaction as $item)
             @php
                 $itemPrice += $item->qty * $item->price;
             @endphp
-        @php
-           dd($item->product);
-        @endphp
             <tr>
-                <td></td>
-                <td style="text-align: right">Rp. {{ number_format($item->price) }}</td>
+                <td>{{ $item->product->name }}</td>
+                <td style="text-align: left">Rp. {{ number_format($item->price) }}</td>
                 <td style="text-align: center;"> {{ $item->qty }}</td>
                 <td style="text-align: right;">Rp. {{ number_format($item->qty * $item->price) }}</td>
             </tr>
@@ -38,7 +35,7 @@
 
         <tr>
             <td colspan="3" align="right"><b>Total:</b></td>
-            <td style="text-align: right;">Rp. 1000</td>
+            <td style="text-align: right">Rp. 1000</td>
         </tr>
         <tr>
             <td colspan="4" align="center" style="font-size:14px; ">

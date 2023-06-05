@@ -112,7 +112,7 @@ class TransactionController extends Controller
 
     public function print($id)
     {
-        $this->pageData["transaction"] = Transaction::with('detail')->where('id',$id)->first();
+        $this->pageData["transaction"] = DetailTransaction::where('transaction_id',$id)->get();
         return view('pages.transaction.print',$this->pageData);
     }
 
