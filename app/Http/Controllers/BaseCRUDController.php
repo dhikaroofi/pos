@@ -35,7 +35,7 @@ class BaseCRUDController extends Controller
             $keyword = "%".strtolower($request->get('keyword'))."%";
             $getData = $getData->where($this->pageData["keywordColumn"],'LIKE',$keyword);
         }
-        $getData = $getData->paginate(10);
+        $getData = $getData->orderBy($this->pageData["keywordColumn"])->paginate(10);
         $this->pageData["data"] = $getData;
         return view("pages." . $this->pageData["page"] . ".index", $this->pageData);
     }

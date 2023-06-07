@@ -34,12 +34,6 @@ Route::middleware(['auth'])->group(function () {
             Route::delete('/delete', [CategoryController::class, 'actDelete'])->name('category.actDelete');
         });
 
-        Route::prefix('product')->group(function () {
-            Route::get('/', [ProductController::class, 'index'])->name('product.index');
-            Route::post('/create', [ProductController::class, 'actCreate'])->name('product.actCreate');
-            Route::put('/update', [ProductController::class, 'actUpdate'])->name('product.actUpdate');
-            Route::delete('/delete', [ProductController::class, 'actDelete'])->name('product.actDelete');
-        });
 
         Route::prefix('user')->group(function () {
             Route::get('/', [UserController::class, 'index'])->name('users.index');
@@ -47,7 +41,18 @@ Route::middleware(['auth'])->group(function () {
             Route::put('/update', [UserController::class, 'actUpdate'])->name('users.actUpdate');
             Route::delete('/delete', [UserController::class, 'actDelete'])->name('users.actDelete');
         });
+
     });
+
+    Route::prefix('product')->group(function () {
+        Route::get('/', [ProductController::class, 'index'])->name('product.index');
+        Route::post('/create', [ProductController::class, 'actCreate'])->name('product.actCreate');
+        Route::put('/update', [ProductController::class, 'actUpdate'])->name('product.actUpdate');
+        Route::delete('/delete', [ProductController::class, 'actDelete'])->name('product.actDelete');
+    });
+
+
+
 
 
 

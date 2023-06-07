@@ -16,7 +16,7 @@
                             @csrf
                             <div class="col-5">
                                 <input class="form-control" type="text"
-                                       placeholder="nama produk atau nomor serial produk" name="keyword">
+                                       placeholder="nama kategori" name="keyword">
                             </div>
                             <div class="col-2">
                                 <button type="submit" class="btn btn-primary">Cari</button>

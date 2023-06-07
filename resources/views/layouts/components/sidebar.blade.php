@@ -21,7 +21,7 @@
                     <span class="nav-link-text ms-1">Dashboard</span>
                 </a>
             </li>
-
+            @if(Auth::user()->role == "kasir")
             <li class="nav-item">
                 <a class="nav-link " href="{{ route('transaction.index') }}">
                     <div
@@ -31,12 +31,13 @@
                     <span class="nav-link-text ms-1">Transaksi</span>
                 </a>
             </li>
+            @endif
             <li class="nav-item">
                 <a data-bs-toggle="collapse" href="#report" class="nav-link " aria-controls="masterDataNav"
                    role="button" aria-expanded="false">
                     <div
                         class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                        <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
+                        <i class="ni ni-calendar-grid-58 text-primary text-sm opacity-10"></i>
                     </div>
                     <span class="nav-link-text ms-1">Laporan</span>
                 </a>
@@ -66,7 +67,7 @@
                     <a class="nav-link" href="{{ route('users.index') }}">
                         <div
                             class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                            <i class="ni ni-calendar-grid-58 text-warning text-sm opacity-10"></i>
+                            <i class="fa fa-user text-primary text-sm opacity-10"></i>
                         </div>
                         <span class="nav-link-text ms-1">Kelola Kasir</span>
                     </a>
@@ -91,6 +92,39 @@
                                     <span class="sidenav-normal">Kategori</span>
                                 </a>
                             </li>
+                            <li class="nav-item ">
+                                <a class="nav-link {{ Route::currentRouteName() == 'product.index' ? 'active' : '' }}"
+                                   href="{{ route('product.index') }}">
+                                    <span class="sidenav-mini-icon"> P </span>
+                                    <span class="sidenav-normal">Produk</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            @else
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('users.index') }}">
+                        <div
+                            class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="ni ni-calendar-grid-58 text-primary text-sm opacity-10"></i>
+                        </div>
+                        <span class="nav-link-text ms-1">Kelola Kasir</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a data-bs-toggle="collapse" href="#masterDataNav" class="nav-link " aria-controls="masterDataNav"
+                       role="button" aria-expanded="false">
+                        <div
+                            class="icon icon-shape icon-sm text-center d-flex align-items-center justify-content-center">
+                            <i class="ni ni-shop text-primary text-sm opacity-10"></i>
+                        </div>
+                        <span class="nav-link-text  ms-1">Kelola Produk</span>
+                    </a>
+                    <div
+                        class="collapse {{ in_array(Route::currentRouteName(),array("product.index"))  ? 'show' : '' }}"
+                        id="masterDataNav" style="">
+                        <ul class="nav ms-4">
                             <li class="nav-item ">
                                 <a class="nav-link {{ Route::currentRouteName() == 'product.index' ? 'active' : '' }}"
                                    href="{{ route('product.index') }}">
