@@ -8,7 +8,7 @@
     <table>
         <tr>
             <th colspan="4">
-                <span style="font-size: 30px">Daynita Frozen Food</span><br/>
+                <span style="font-size: 30px">Dayinta Frozen Food</span><br/>
                 <br/>
             </th>
         </tr>
@@ -35,13 +35,13 @@
 
         <tr>
             <td colspan="3" align="right"><b>Total:</b></td>
-            <td style="text-align: right">Rp. 1000</td>
+            <td style="text-align: right">Rp. {{ number_format($itemPrice) }}</td>
         </tr>
         <tr>
             <td colspan="4" align="center" style="font-size:14px; ">
                 <p>
                     Terima Kasih<br/><span>{{ date('d M Y H:i') }}</span><br/>
-                    <span style="font-weight: normal;">Jln HOS Cokroaminoto NO 45<br/>Yogyakarta<br/></span>
+                    <span style="font-weight: normal;">Jln Raya Brengkok Parakancanggah<br/>Banjarnegara<br/></span>
                 </p>
             </td>
         </tr>

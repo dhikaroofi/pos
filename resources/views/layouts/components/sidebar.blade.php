@@ -5,7 +5,7 @@
            aria-hidden="true" id="iconSidenav"></i>
         <a class="navbar-brand m-0" href=" https://demos.creative-tim.com/argon-dashboard/pages/dashboard.html "
            target="_blank">
-            <span class="ms-1 font-weight-bold">Daynita Frozen Food</span>
+            <span class="ms-1 font-weight-bold">Dayinta Frozen Food</span>
         </a>
     </div>
     <hr class="horizontal dark mt-0" style="text-transform: capitalize">
